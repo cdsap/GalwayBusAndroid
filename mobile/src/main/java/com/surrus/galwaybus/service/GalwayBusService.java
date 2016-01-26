@@ -42,7 +42,8 @@ public class GalwayBusService {
     }
 
     public void getStops(int routeId) {
-Log.e("inaki","1111");
+
+        Log.e("inaki","1111");
         galwayBusResetInterface.getStops(routeId,
                 new Callback<GetStopsResponse>() {
                     @Override

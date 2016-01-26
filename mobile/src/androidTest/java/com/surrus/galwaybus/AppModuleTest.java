@@ -1,10 +1,13 @@
 package com.surrus.galwaybus;
 
 
+import com.squareup.okhttp.mockwebserver.MockWebServer;
 import com.surrus.galwaybus.service.GalwayBusService;
 import com.surrus.galwaybus.ui.RoutesFragment;
 import com.surrus.galwaybus.ui.StopsActivity;
 import com.surrus.galwaybus.ui.StopsMapActivity;
+
+import java.io.IOException;
 
 import javax.inject.Singleton;
 
@@ -25,7 +28,7 @@ import retrofit.RestAdapter;
                 StopsMapActivity.class
         }
 )
-public class AppModule {
+public class AppModuleTest {
 
     @Provides
     @Singleton
@@ -37,8 +40,14 @@ public class AppModule {
     @Provides
     @Singleton
     public GalwayBusService providesInterface() {
+        MockWebServer mockWebServer = new MockWebServer();
+        try {
+            mockWebServer.play();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("http://galwaybus.herokuapp.com/")
+                .setEndpoint(mockWebServer.getUrl("/").toString())
                 .build();
         return restAdapter.create(GalwayBusService.class);
     }
